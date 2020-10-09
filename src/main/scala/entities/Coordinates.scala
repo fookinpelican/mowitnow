@@ -23,4 +23,13 @@ class Coordinates (var x: Int, var y: Int){
     }
 
   }
+  def isOutOfBounds() : Boolean = {
+    if(this.x < 0 || this.y < 0) {
+      true
+    } else {
+      false
+    }
+
+
+  }
 }

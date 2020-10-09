@@ -1,5 +1,6 @@
 package entities
 
+
 import scala.collection.mutable.ArrayBuffer
 
 class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
@@ -15,6 +16,26 @@ class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
   def this(size : Coordinates, mowers : ArrayBuffer[Mower]) = {
     this(mowers, size)
   }
+  def isSpotTaken(coordinates: Coordinates) : Boolean = {
+    for (mower <- mowers) {
+      if (coordinates.equals(mower.currentPlace)) {
+        true
+      }
+    }
+    false
+  }
 
+  def applyActions()  = {
+    for( mower <- mowers) {
+      mower.applyMvmts()
+      println("stop")
 
+    }
+  }
+
+  def printMowers() = {
+    for (i <- 0 to mowers.size - 1) {
+      println("Mower "+ (i+1) + " : " +mowers(i).toString)
+    }
+  }
 }

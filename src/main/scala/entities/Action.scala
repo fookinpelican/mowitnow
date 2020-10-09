@@ -8,4 +8,5 @@ object Action extends Enumeration {
   val right = Value('D')
 
   def isActionType(s: String) = values.exists(_.toString == s)
+
 }
