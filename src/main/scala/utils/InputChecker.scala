@@ -1,39 +1,20 @@
-import java.io.{FileNotFoundException, IOException}
+package utils
 
+import entities.{Action, Coordinates}
 
-import scala.io.Source
+object InputChecker {
 
-object Utils {
-  def getFileContent(filePath : String) : String = {
-    var fileContent = ""
-    try {
-      val bufferedSource = Source.fromFile(filePath)
-      for (line <- bufferedSource.getLines()) {
-        fileContent = fileContent + line + "\n"
-      }
-      bufferedSource.close
-
-    } catch {
-      case x: FileNotFoundException => {
-        println("Unable to find file")
-      }
-      case x : IOException => {
-        println("Unable to read file")
-      }
-    }
-    fileContent
-  }
-  def checkinput(line : String) : Boolean = {
+  def checkinput(line: String): Boolean = {
     var tmp = line.split(" ")
     if (tmp.size != 3) {
       throw new Error("Missing parameter in mower creation")
     }
     else {
 
-      try{
+      try {
         var x = tmp(0).toInt
         var y = tmp(1).toInt
-        if(checkOnDir(tmp(2))) {
+        if (checkOnDir(tmp(2))) {
           var dir = tmp(2)
           true
         } else {
@@ -48,14 +29,16 @@ object Utils {
     }
 
   }
-  def checkOnDir(direc : String) : Boolean = {
-    if (direc.equals("N") || direc.equals("E") || direc.equals("W") || direc.equals("S") ) {
+
+  def checkOnDir(direc: String): Boolean = {
+    if (direc.equals("N") || direc.equals("E") || direc.equals("W") || direc.equals("S")) {
       true
-    }else {
+    } else {
       false
     }
   }
-  def getLawnSizeFromFile(size : String) : Coordinates ={
+
+  def getLawnSizeFromFile(size: String): Coordinates = {
     var tmp = size.split(" ")
     if (tmp.size != 2) {
       throw new Error("The size of the lawn should be represented by two integers separated by a space")
@@ -71,6 +54,15 @@ object Utils {
         }
       }
     }
-    return null
+    null
+  }
+
+  def isActionContent(actions: String): Boolean = {
+    for (i <- 0 to actions.length()) {
+      if (!Action.isActionType(actions.charAt(i).toString)) {
+        false
+      }
+    }
+    true
   }
 }

@@ -1,3 +1,5 @@
+package entities
+
 import scala.collection.mutable.ArrayBuffer
 
 class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
