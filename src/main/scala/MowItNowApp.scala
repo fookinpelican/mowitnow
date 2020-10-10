@@ -5,48 +5,38 @@ import utils.{ContentGetter, InputChecker}
 import scala.collection.mutable.ArrayBuffer
 
 object MowItNowApp extends App {
-  /*Print welcome message */
   println("**********************************")
   println("Welcome to the lawn mower app")
   println("**********************************")
 
-/*  Ask for conf file path */
   println("- Please type the full path of your conf file")
-  val filePath = scala.io.StdIn.readLine()
+  val filePath = scala.io.StdIn.readLine()      // get user input
 
-  /* extract file content as string */
-  var fileContent = ContentGetter.getFileContent(filePath)
+  var fileContent = ContentGetter.getFileContent(filePath)   // get file content as string
 
   var tmp = fileContent.split("\n")
   if (tmp.size % 2 != 1) {
     throw new Error("Your file is missing lines")
   }
-  /*Create empty lawn  */
-  var lawn = new Lawn(InputChecker.getLawnSizeFromFile(tmp(0)),ArrayBuffer[Mower]())
-  /*
-  adds the mowers to the lawn
-      - checks the first line to see if it's parsable to coordinates + N|E|W|S  or throws Error
-      - creates coordinates
-      - check the line of actions to see if it only contains D G and A or throws Error
-      - check if mower coordinates are greater than lawn max or throws Error
-      - create and add mower to lawn
-   */
-  for(a <- 1 to tmp.size - 1 by 2){
-    if (InputChecker.checkinput(tmp(a))) {
+
+  var lawn = new Lawn(ArrayBuffer[Mower](),InputChecker.getLawnSizeFromFile(tmp(0))) // create coord from 1st line of file and create lawn
+
+  for(a <- 1 to tmp.size - 1 by 2){        // loop though mower spec in file content
+    if (InputChecker.checkinputForMower(tmp(a))) {  // check if line contains right info
       val splitLine = tmp(a).split(" ")
-      val coordinates = new Coordinates(splitLine(0).toInt, splitLine(1).toInt)
-      val mvmts = tmp(a+1)
-      if (coordinates.isGreaterThan(lawn.size)) {
+      val coordinates = new Coordinates(splitLine(0).toInt, splitLine(1).toInt) // create new coordinates
+      val mvmts = tmp(a+1)        // get actions line
+      if (coordinates.isGreaterThan(lawn.size)) { // check if mower is not outside of lawn
         throw new Error("mower outside of lawn")
       }
-      if (!InputChecker.isActionContent(mvmts)) {
+      if (!InputChecker.isActionContent(mvmts)) {  // check if actions only contains D G or A
         throw new Error("Actions can only be D G or A")
       }
-      lawn.addMower(new Mower(coordinates, coordinates, splitLine(2), mvmts, lawn))
+      lawn.addMower(new Mower(coordinates, coordinates, splitLine(2), mvmts, lawn)) // add mowers to the lawn
     }
   }
-  lawn.applyActions()
-  lawn.printMowers()
+  lawn.applyActions()  // for each mower on the lawn apply actions
+  lawn.printMowers() // print the result of the mvmts
 
 
 

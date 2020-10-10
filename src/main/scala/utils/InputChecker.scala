@@ -4,17 +4,16 @@ import entities.{Action, Coordinates}
 
 object InputChecker {
 
-  def checkinput(line: String): Boolean = {
+  def checkinputForMower(line: String): Boolean = {
     val tmp = line.split(" ")
     if (tmp.size != 3) {
       throw new Error("Missing parameter in mower creation")
     }
     else {
-
       try {
         val x = tmp(0).toInt
         val y = tmp(1).toInt
-        if (checkOnDir(tmp(2))) {
+        if (checkDirection(tmp(2))) {
           true
         } else {
           throw new Error("Direction can only be N E W or S ")
@@ -29,7 +28,7 @@ object InputChecker {
 
   }
 
-  def checkOnDir(direc: String): Boolean = {
+  def checkDirection(direc: String): Boolean = { // check if direction N E W or S
     if (direc.equals("N") || direc.equals("E") || direc.equals("W") || direc.equals("S")) {
       true
     } else {
@@ -37,7 +36,7 @@ object InputChecker {
     }
   }
 
-  def getLawnSizeFromFile(size: String): Coordinates = {
+  def getLawnSizeFromFile(size: String): Coordinates = { // parse the first line to extract lawn max coordinates
     val tmp = size.split(" ")
     if (tmp.size != 2) {
       throw new Error("The size of the lawn should be represented by two integers separated by a space")
@@ -56,7 +55,7 @@ object InputChecker {
     null
   }
 
-  def isActionContent(actions: String): Boolean = {
+  def isActionContent(actions: String): Boolean = {  // check if each char of the action line is D G or A
     for (i <- 0 to actions.length()-1) {
       if (!Action.isActionType(actions.charAt(i).toString)) {
         false

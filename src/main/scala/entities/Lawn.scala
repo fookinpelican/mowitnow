@@ -5,7 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
 
-  def addMower(mower : Mower) = {
+  def addMower(mower : Mower) = {   // add mower to the list of mowers if one isnt already there
     for (a <- mowers) {
       if (a.currentPlace.equals(mower)) {
         throw new Error("A mower is already in this spot")
@@ -13,10 +13,8 @@ class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
     }
     mowers += mower
   }
-  def this(size : Coordinates, mowers : ArrayBuffer[Mower]) = {
-    this(mowers, size)
-  }
-  def isSpotTaken(coordinates: Coordinates) : Boolean = {
+
+  def isSpotTaken(coordinates: Coordinates) : Boolean = {   // check if a mower is already at coordinates
     for (mower <- mowers) {
       if (coordinates.equals(mower.currentPlace)) {
         true
@@ -25,15 +23,17 @@ class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
     false
   }
 
-  def applyActions()  = {
+  def applyActions()  = {    // for each mower apply list of actions and print note if the actions couldn't all be completed
     for( mower <- mowers) {
-      mower.applyMvmts()
-      println("stop")
-
+      val test = mower.applyMvmts()
+      if (test.isPresent) {
+        println("NOTE : Your mower stopped before the end of its cycle with following message")
+        println(test.get())
+      }
     }
   }
 
-  def printMowers() = {
+  def printMowers() = {   // format the printing of the mowers on lawn
     for (i <- 0 to mowers.size - 1) {
       println("Mower "+ (i+1) + " : " +mowers(i).toString)
     }

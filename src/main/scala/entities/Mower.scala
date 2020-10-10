@@ -5,25 +5,23 @@ import java.util.Optional
 
 class Mower(var initialPlace : Coordinates, var currentPlace : Coordinates, var direction : String, var mvmts :String, var lawn : Lawn) {
 
-  def applyMvmts(): Optional[String]  = {
-    for (i <- 0 to mvmts.length-1) {
-      val action = mvmts.charAt(i).toString
-      if (action.equals("A")) {
+  def applyMvmts(): Optional[String]  = {    // return String or nothing (to know if the actions were all completed)
+    for (i <- 0 to mvmts.length-1) {       //  loop through actions
+      val action = mvmts.charAt(i).toString  // get single action as string
+      if (action.equals("A")) {           // if action = a, get new coordinates
         val newCoordinates = getNextMove()
-        println(newCoordinates.toString)
         if (!lawn.isSpotTaken(newCoordinates)) {
-          if (!currentPlace.isGreaterThan(lawn.size) || newCoordinates.isOutOfBounds()){
-            currentPlace = newCoordinates
+          if (!currentPlace.isGreaterThan(lawn.size) && !newCoordinates.isOutOfBounds()){
+            currentPlace = newCoordinates // if the new spot is available, and the coordinates are inside lawn update coordinates
           }
-          else {
+          else { // otherwise stop execution and return the reason for stopping
             return Optional.of("You're out of your lawn")
           }
         } else {
           return Optional.of("A mower's already there")
         }
-      }else {
-        val test = rotate(action)
-        this.direction = test
+      }else { // if action equals D or G rotate mower
+        rotate(action)
       }
     }
     Optional.empty()
@@ -43,49 +41,36 @@ class Mower(var initialPlace : Coordinates, var currentPlace : Coordinates, var 
   }
 
 
-  def rotate(action : String) : String = {
+  def rotate(action : String)  = {
     if (action.equals("G")){
-        println("turning left")
-        return turnLeft()
+         turnLeft()
     }
     if(action.equals("D")){
-      println("turning right")
-       return turnRight()
+        turnRight()
     }
-    null
   }
-  def turnLeft(): String = {
-    if (this.direction.equals("N")) {
-      return "W"
-    }
-    if(this.direction.equals("W")){
-      return "S"
-    }
-    if(this.direction.equals("S")){
-      return "E"
-    }
-    if(this.direction.equals("E")){
-      return "N"
 
+  def turnLeft() = {
+    this.direction match {
+      case "N" => this.direction = "W"
+      case "W" => this.direction = "S"
+      case "S" => this.direction = "E"
+      case "E" => this.direction = "N"
     }
-    null
   }
-  def turnRight(): String  = {
-    if (this.direction.equals("N")) {
-      return "E"
+
+
+  def turnRight()  = {
+
+    this.direction match {
+      case "N" => this.direction = "E"
+      case "W" => this.direction = "N"
+      case "S" => this.direction = "W"
+      case "E" => this.direction = "S"
     }
-    if(this.direction.equals("W")){
-      return "N"
-    }
-    if(this.direction.equals("S")){
-      return "W"
-    }
-    if(this.direction.equals("E")){
-      return "S"
-    }
-    null
+
   }
-  override def toString: String = {
+  override def toString: String = { // to string override to print coordinates + direction
      currentPlace.toString + " " + direction
   }
 }
