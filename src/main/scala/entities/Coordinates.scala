@@ -21,7 +21,6 @@ class Coordinates (var x: Int, var y: Int){
     } else {
       false
     }
-
   }
   def isOutOfBounds() : Boolean = {
     if(this.x < 0 || this.y < 0) {

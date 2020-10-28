@@ -1,5 +1,6 @@
 
 import entities.{Coordinates, Lawn, Mower}
+import exceptions.{MowerOutOfBoundsException, WrongNumberOfLinesException}
 import utils.{ContentGetter, InputChecker}
 
 import scala.collection.mutable.ArrayBuffer
@@ -16,7 +17,7 @@ object MowItNowApp extends App {
 
   var tmp = fileContent.split("\n")
   if (tmp.size % 2 != 1) {
-    throw new Error("Your file is missing lines")
+    throw WrongNumberOfLinesException()
   }
 
   var lawn = new Lawn(ArrayBuffer[Mower](),InputChecker.getLawnSizeFromFile(tmp(0))) // create coord from 1st line of file and create lawn
@@ -26,16 +27,17 @@ object MowItNowApp extends App {
       val splitLine = tmp(a).split(" ")
       val coordinates = new Coordinates(splitLine(0).toInt, splitLine(1).toInt) // create new coordinates
       val mvmts = tmp(a+1)        // get actions line
-      if (coordinates.isGreaterThan(lawn.size)) { // check if mower is not outside of lawn
-        throw new Error("mower outside of lawn")
+      if (coordinates.isGreaterThan(lawn.size) || coordinates.isOutOfBounds()) { // check if mower is not outside of lawn
+        throw MowerOutOfBoundsException()
       }
-      if (!InputChecker.isActionContent(mvmts)) {  // check if actions only contains D G or A
-        throw new Error("Actions can only be D G or A")
-      }
+      InputChecker.isActionContent(mvmts) // check if actions only contains D G or A
+
       lawn.addMower(new Mower(coordinates, coordinates, splitLine(2), mvmts, lawn)) // add mowers to the lawn
+      val index = a/2
+      lawn.applyActions(index)  // for each mower on the lawn apply actions
     }
   }
-  lawn.applyActions()  // for each mower on the lawn apply actions
+ // lawn.applyActions()  // for each mower on the lawn apply actions
   lawn.printMowers() // print the result of the mvmts
 
 

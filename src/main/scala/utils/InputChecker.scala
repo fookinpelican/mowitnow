@@ -1,13 +1,14 @@
 package utils
 
 import entities.{Action, Coordinates}
+import exceptions.{ActionValueException, DirectionValueException, MissingMowerAttributeException}
 
 object InputChecker {
 
   def checkinputForMower(line: String): Boolean = {
     val tmp = line.split(" ")
     if (tmp.size != 3) {
-      throw new Error("Missing parameter in mower creation")
+      throw MissingMowerAttributeException()
     }
     else {
       try {
@@ -16,7 +17,7 @@ object InputChecker {
         if (checkDirection(tmp(2))) {
           true
         } else {
-          throw new Error("Direction can only be N E W or S ")
+          throw DirectionValueException()
         }
       } catch {
         case e: NumberFormatException => {
@@ -55,15 +56,15 @@ object InputChecker {
     null
   }
 
-  def isActionContent(actions: String): Boolean = {  // check if each char of the action line is D G or A
+  def isActionContent(actions: String)  = {// check if each char of the action line is D G or A
+    val emumList = Action.values.map(_.toString).toList
     for (i <- 0 to actions.length()-1) {
-      if (!Action.isActionType(actions.charAt(i).toString)) {
-        false
+      if (!emumList.contains(actions.charAt(i).toString)) {
+        throw ActionValueException()
       }
     }
-    true
-  }
 
+  }
 
 
 }

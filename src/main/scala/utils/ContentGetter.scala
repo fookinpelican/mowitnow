@@ -2,13 +2,13 @@ package utils
 
 import java.io.{FileNotFoundException, IOException}
 
-import scala.io.Source
+import scala.io.{BufferedSource, Source}
 
 object ContentGetter {
   def getFileContent(filePath: String): String = {
     var fileContent = ""
     try {
-      val bufferedSource = Source.fromFile(filePath)
+      val bufferedSource = getBufferForInput(filePath)
       for (line <- bufferedSource.getLines()) {
         fileContent = fileContent + line + "\n"
       }
@@ -16,12 +16,19 @@ object ContentGetter {
 
     } catch {
       case x: FileNotFoundException => {
-        println("Unable to find file")
+        throw new Error("Unable to find file")
       }
       case x: IOException => {
-        println("Unable to read file")
+        throw new Error("Unable to read file")
       }
     }
     fileContent
+  }
+  def getBufferForInput(path : String) : BufferedSource = {
+    if (path.isEmpty) {
+      Source.fromInputStream(getClass().getClassLoader().getResourceAsStream("test"))
+    }else{
+      Source.fromFile(path)
+    }
   }
 }

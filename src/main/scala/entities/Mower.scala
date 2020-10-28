@@ -11,7 +11,7 @@ class Mower(var initialPlace : Coordinates, var currentPlace : Coordinates, var 
       if (action.equals("A")) {           // if action = a, get new coordinates
         val newCoordinates = getNextMove()
         if (!lawn.isSpotTaken(newCoordinates)) {
-          if (!currentPlace.isGreaterThan(lawn.size) && !newCoordinates.isOutOfBounds()){
+          if (!newCoordinates.isGreaterThan(lawn.size) && !newCoordinates.isOutOfBounds()){
             currentPlace = newCoordinates // if the new spot is available, and the coordinates are inside lawn update coordinates
           }
           else { // otherwise stop execution and return the reason for stopping

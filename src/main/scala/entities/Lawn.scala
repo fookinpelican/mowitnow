@@ -17,20 +17,20 @@ class Lawn(var mowers : ArrayBuffer[Mower], var size : Coordinates) {
   def isSpotTaken(coordinates: Coordinates) : Boolean = {   // check if a mower is already at coordinates
     for (mower <- mowers) {
       if (coordinates.equals(mower.currentPlace)) {
-        true
+        return true
       }
     }
     false
   }
 
-  def applyActions()  = {    // for each mower apply list of actions and print note if the actions couldn't all be completed
-    for( mower <- mowers) {
-      val test = mower.applyMvmts()
+  def applyActions(index : Int)  = {    // for each mower apply list of actions and print note if the actions couldn't all be completed
+    //for( mower <- mowers) {
+      val test = mowers(index).applyMvmts()
       if (test.isPresent) {
         println("NOTE : Your mower stopped before the end of its cycle with following message")
         println(test.get())
       }
-    }
+    //}
   }
 
   def printMowers() = {   // format the printing of the mowers on lawn
